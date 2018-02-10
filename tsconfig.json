@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "outDir": "./build",
+    "watch": true,
+    "strict": true,
+    "rootDir":"./src",
+    "noImplicitAny": false,
+    "inlineSourceMap": false
+  },
+  "include":[
+    "./src/**/*"
+],
+  "exclude": [
+    "views",
+    "static"
+  ]
+}
