@@ -67,8 +67,8 @@ class Service {
         }
       })
       for (let url of lastArr) {
-		let agent = p'
-		if(url.indexOf('//m.') > -1 || url.indexOf('//wap.') > -1) agent = 'm
+		let agent = 'p'
+		if(url.indexOf('//m.') > -1 || url.indexOf('//wap.') > -1) agent = 'm'
         Reptile.find({url:url}).exec((err, rept) => {
           if (!err) {
             if(rept && rept.length > 0) return
