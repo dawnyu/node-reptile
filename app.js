@@ -47,7 +47,7 @@ setTimeout(()=>{
 }, 3000)
 setInterval(() => {
   getUrl()
-}, 200000)
+}, 60000)
 
 var getUrl = function() {
   let url = returnFE().then(data => {

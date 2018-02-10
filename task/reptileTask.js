@@ -13,7 +13,7 @@ const task = (url = 'https://i.maxthon.cn/') => {
       service.deleteById(data.id)
       setTimeout(() => {
         data.url ? task(data.url) : task()
-      }, 1000 * 60 * 10)
+      }, 1000 * 10)
     })
 }
 

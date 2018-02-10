@@ -72,6 +72,7 @@ class Service {
         && item.indexOf('.doc') === -1
         && item.indexOf('.rm') === -1
         && item.indexOf('.mp4') === -1
+		&& item.indexOf('tuniu') === -1
         && item.indexOf('.ico') === -1
         && item.indexOf('.js') === -1
         && item.indexOf('.mv') === -1
