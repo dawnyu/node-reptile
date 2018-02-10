@@ -4,10 +4,10 @@ const path = require('path')
 const fs = require('fs')
 const logger = require('./middlewares/simpleLogger')
 const bodyparser = require('koa-bodyparser')
-// const sqldb = require('./sqldb')
+    // const sqldb = require('./sqldb')
 require('./db/mongo')
 
-const { start, returnFE, deleteUrl } = require('./task/reptileTask')
+const { start, returnFE } = require('./task/reptileTask')
 
 // const parseResp = require('./middlewares/parseResp')
 
@@ -35,48 +35,23 @@ io.sockets.on('connection', function(socket) {
     console.log("Connection " + socket.id + " accepted.");
     socketIds.set(socket.id, 'p')
     socket.on('message', function(type) {
-      console.log("Received message: " + type + " - from client " + socket.id);
-      socketIds.set(socket.id, type || 'p')
+        console.log("Received message: " + type + " - from client " + socket.id);
+        socketIds.set(socket.id, type || 'p')
     });
     socket.on('disconnect', function() {
-      socketIds.delete(socket.id)
+        socketIds.delete(socket.id)
     })
 });
-setTimeout(()=>{
-  getUrl()
-}, 3000)
+
 setInterval(() => {
-  getUrl()
-}, 60000)
+    getUrl()
+}, 5000)
 
 var getUrl = function() {
-  let url = returnFE().then(data => {
-    let ids = []
-    if(!data || data.length === 0) return
     socketIds.forEach((type, socketId) => {
-      let objs = [], urls = []
-      if(type === 'p') {
-        objs = data.filter(obj => obj.agent === 'p')
-      } else {
-        objs = data.filter(obj => obj.agent === 'm')
-        if(!objs || objs.length === 0) objs = data
-      }
-      //取出前十条
-	    if(objs.length > 10) {
-        objs = objs.slice(0, 10)
-      }
-      //取出这十条id
-      objs.forEach(obj => {
-        let index = 0
-        ids.push(obj.id)
-        urls.push(obj.url)
-        index = data.findIndex(item => item.id === obj.id )
-        data.splice(index, 1)
-      })
-      console.log(urls)
-      io.sockets.sockets[socketId].emit('url', urls)
+        returnFE().then(data => {
+            io.sockets.sockets[socketId].emit('url', data)
+        })
     })
-    deleteUrl(ids)
-  })
 }
 start()
