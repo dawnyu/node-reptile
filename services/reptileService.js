@@ -6,15 +6,15 @@ const mongoose = require('mongoose'),
 class Service {
   constructor() {}
   async findOne() {
-    let url
+    let obj
     let query = await Reptile.findOne((err,data) => {
       if(data){
-        url = data.url
+        obj = data
       }else{
-        url = null
+        obj = null
       }
     })
-    return url
+    return obj
   }
 
   async find(limit) {
@@ -29,6 +29,26 @@ class Service {
     })
     return _data
   }
+
+  async findAll() {
+    let _data
+    let query = Reptile.find({})
+    await query.exec((err,data) => {
+      _data = data
+    })
+    return _data
+  }
+
+  async delete(ids) {
+    ids.forEach(id => {
+      Reptile.remove({id: id },err => {})
+    })
+  }
+
+  async deleteById(id) {
+    Reptile.remove({id: id },err => {})
+  }
+
 
  async reptile(baseUrl) {
     var arr = [],lastArr = []
@@ -52,6 +72,8 @@ class Service {
         && item.indexOf('.doc') === -1
         && item.indexOf('.rm') === -1
         && item.indexOf('.mp4') === -1
+        && item.indexOf('.ico') === -1
+        && item.indexOf('.js') === -1
         && item.indexOf('.mv') === -1
         && item.indexOf('.dtd') === -1
         && item.indexOf('www.w3.org') === -1
@@ -66,7 +88,7 @@ class Service {
           lastArr.push(item)
         }
       })
-      for (let url of lastArr) {
+  for (let url of lastArr) {
 		let agent = 'p'
 		if(url.indexOf('//m.') > -1 || url.indexOf('//wap.') > -1) agent = 'm'
         Reptile.find({url:url}).exec((err, rept) => {
@@ -75,7 +97,7 @@ class Service {
             Reptile.create({
               id: uuidv1(),
               url: url,
-			  agent: agent
+			        agent: agent
             }, err => {
               if (err) {
                 console.log('insert data err:%s', err)

@@ -7,7 +7,7 @@ const bodyparser = require('koa-bodyparser')
 // const sqldb = require('./sqldb')
 require('./db/mongo')
 
-const { start, returnFE } = require('./task/reptileTask')
+const { start, returnFE, deleteUrl } = require('./task/reptileTask')
 
 // const parseResp = require('./middlewares/parseResp')
 
@@ -29,33 +29,54 @@ var server;
 server = app.listen(8000)
 
 console.log('app started at port 8000...')
-var socketIds = new Set()
+var socketIds = new Map()
 var io = require("socket.io").listen(server)
 io.sockets.on('connection', function(socket) {
     console.log("Connection " + socket.id + " accepted.");
-    socketIds.add(socket.id)
-    socket.on('message', function(message) {
-        console.log("Received message: " + message + " - from client " + socket.id);
-        io.emit('message', message);
+    socketIds.set(socket.id, 'p')
+    socket.on('message', function(type) {
+      console.log("Received message: " + type + " - from client " + socket.id);
+      socketIds.set(socket.id, type || 'p')
     });
     socket.on('disconnect', function() {
       socketIds.delete(socket.id)
     })
 });
-
+setTimeout(()=>{
+  getUrl()
+}, 3000)
 setInterval(() => {
-   getUrl()
-}, 20000)
+  getUrl()
+}, 200000)
 
 var getUrl = function() {
-  let url = returnFE(socketIds.size).then(data => {
-    let url, index = 0
-    socketIds.forEach((socketId) => {
-      url = data.length > index ? data[index].url : data[index % data.length].url
-	console.log('emit--',url)
-      io.sockets.sockets[socketId].emit('url', url)
-      index++
+  let url = returnFE().then(data => {
+    let ids = []
+    if(!data || data.length === 0) return
+    socketIds.forEach((type, socketId) => {
+      let objs = [], urls = []
+      if(type === 'p') {
+        objs = data.filter(obj => obj.agent === 'p')
+      } else {
+        objs = data.filter(obj => obj.agent === 'm')
+        if(!objs || objs.length === 0) objs = data
+      }
+      //取出前十条
+	    if(objs.length > 10) {
+        objs = objs.slice(0, 10)
+      }
+      //取出这十条id
+      objs.forEach(obj => {
+        let index = 0
+        ids.push(obj.id)
+        urls.push(obj.url)
+        index = data.findIndex(item => item.id === obj.id )
+        data.splice(index, 1)
+      })
+      console.log(urls)
+      io.sockets.sockets[socketId].emit('url', urls)
     })
+    deleteUrl(ids)
   })
 }
 start()

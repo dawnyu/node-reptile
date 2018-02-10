@@ -1,37 +1,29 @@
 const service = require('../services/reptileService')
 
 const start = async() => {
-  let url = await service.findOne()
-  url ? task(url) : task()
+  let data = await service.findOne()
+  data ? task(data.url) : task()
 }
 
 const task = (url = 'https://i.maxthon.cn/') => {
-  console.log('开始采集url:==%s', url)
   service.reptile(url)
     service
     .findOne()
     .then((data) => {
+      service.deleteById(data.id)
       setTimeout(() => {
-        data ? task(data) : task()
-      }, 30000)
+        data.url ? task(data.url) : task()
+      }, 1000 * 60 * 10)
     })
 }
 
-const mtask = (url = 'https://m.hao123.com') => {
-  console.log('开始采集url:==%s', url)
-  service.reptile(url)
-    service
-    .findOne()
-    .then((data) => {
-      setTimeout(() => {
-        data ? mtask(data) : mtask()
-      }, 20 * 60 *1000)
-    })
-}
-
-returnFE = async(limit) => {
-  let obj = service.find(limit)
+returnFE = async() => {
+  let obj = service.findAll()
   return obj
 }
 
-module.exports = { start, mtask, returnFE }
+deleteUrl = async(ids) => {
+  service.delete(ids)
+}
+
+module.exports = { start, returnFE, deleteUrl }
