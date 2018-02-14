@@ -13,7 +13,13 @@ const ReptileSchema = new Schema({
         type: String
     },
     index: {
-        type: Number
+        type: String
+    },
+	host: {
+        type: String
+    },
+	status: {
+        type: String
     },
     meta: {
         createAt: {

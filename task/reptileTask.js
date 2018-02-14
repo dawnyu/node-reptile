@@ -8,17 +8,19 @@ const start = async() => {
 const task = (url = 'https://i.maxthon.cn/') => {
     service.reptile(url)
     service
-        .findOne()
+        .findBaseRandom()
         .then((data) => {
-            // service.deleteById(data.id)
+            
             setTimeout(() => {
-                data.url ? task(data.url) : task()
-            }, 1000 * 10)
+				let url = data && data.length > 0 ? data[0].url : ''
+                task(url)
+            }, 1000 * 2)
         })
 }
 
-returnFE = async() => {
-    return service.findRandom()
+const returnFE = async() => {
+	const obj = service.findRandom()
+    return obj
 }
 
 deleteUrl = async(ids) => {
