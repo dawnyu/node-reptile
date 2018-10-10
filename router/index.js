@@ -1,13 +1,13 @@
 const Router = require('koa-router')
-const url = require('../controller/Url')
+const User = require('../controller/User')
 
 module.exports = function(){
   var router = new Router({
     prefix: '/api'
   })
 
-  router.get('/getUrl',url.getUrl)
-
+  router.get('/hello',User.hello)
+  router.post('/user/add', User.add)
 
   return router
 }

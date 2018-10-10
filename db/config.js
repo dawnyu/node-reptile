@@ -1,8 +1,8 @@
 module.exports = {
   sequelize: {
     username:'user',
-    password:'123456',
-    database: 'nodejs',
+    password:'Abc123456.',
+    database: 'mydb',
     host: 'localhost',
     dialect: 'mysql',
     define:{

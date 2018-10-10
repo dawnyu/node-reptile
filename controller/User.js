@@ -1,4 +1,4 @@
-const service = require('../services/service')
+const service = require('../services/userService')
 const db = require('../sqldb/index')
 const uuidv1 = require('uuid/v1')
 const User = db.User
@@ -9,7 +9,8 @@ const User = db.User
   }
 
   exports.add = async(ctx, next) =>{
-    ctx.body = await service.add(ctx.params.username,ctx.params.password)
+    const params = ctx.request.body
+    ctx.body = await service.add(params.username,params.password)
     await next()
   }
 

@@ -3,10 +3,10 @@
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('user', {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER(11),
       primaryKey: true,
       allowNull: false,
-      defaultValue: DataTypes.UUIDV1
+      autoIncrement: true
     },
     username: {
       type: DataTypes.STRING
@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     userId: {
-      type: DataTypes.UUID
+      type: DataTypes.INTEGER(11)
     },
     createdAt:{
       type:DataTypes.DATE

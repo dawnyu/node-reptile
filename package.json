@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "dev": "supervisor -w build ./build/app.js",
+    "dev": "supervisor ./app.js",
+    "dev1": "export NODE_ENV=development&&export PORT=8077&&nodemon --inspect app.js",
     "build": "tsc"
   },
   "dependencies": {
